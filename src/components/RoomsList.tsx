@@ -1,8 +1,7 @@
-import { Add, Delete, Info, MoreVert } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import {
   Card,
   Fab,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -12,26 +11,25 @@ import {
   TableRow,
 } from '@mui/material';
 import { useDialogsStore } from '../stores/dialogsStore';
-import { useUsersStore } from '../stores/usersStore';
+import { useRoomsStore } from '../stores/roomsStore';
 
-const UsersList = () => {
-  const users = useUsersStore((state) => state.users);
-  const removeUser = useUsersStore((state) => state.removeUser);
-
-  const toggleCreateUserDialog = useDialogsStore(
-    (state) => state.toggleCreateUserDialog
+const RoomsList = () => {
+  const toggleCreateRoomDialog = useDialogsStore(
+    (state) => state.toggleCreateRoomDialog
   );
 
+  const rooms = useRoomsStore((state) => state.rooms);
+
   return (
-    <>
+    <div>
       <Fab
         variant="extended"
         sx={{ position: 'absolute', bottom: 24, right: 24 }}
         color="secondary"
-        onClick={toggleCreateUserDialog}
+        onClick={toggleCreateRoomDialog}
       >
         <Add sx={{ mr: 1 }} />
-        Add user
+        Add room
       </Fab>
 
       <Card sx={{ width: '100%' }}>
@@ -41,32 +39,26 @@ const UsersList = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell align="right">ID</TableCell>
-                <TableCell padding="checkbox" />
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {rooms.map((room) => (
                 <TableRow
-                  key={user.id}
+                  key={room.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {user.name}
+                    {room.name}
                   </TableCell>
-                  <TableCell align="right">{user.id}</TableCell>
-                  <TableCell padding="checkbox">
-                    <IconButton onClick={() => removeUser(user.id)}>
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
+                  <TableCell align="right">{room.id}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
-    </>
+    </div>
   );
 };
 
-export default UsersList;
+export default RoomsList;

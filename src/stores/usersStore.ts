@@ -1,4 +1,5 @@
 import create from 'zustand';
+import { persist } from 'zustand/middleware';
 import { User } from '../models/User';
 
 export type UsersState = {
@@ -7,9 +8,14 @@ export type UsersState = {
   removeUser: (id: string) => void;
 };
 
-export const useUsersStore = create<UsersState>((set) => ({
-  users: [],
-  addUser: (user) => set((state) => ({ users: [...state.users, user] })),
-  removeUser: (id) =>
-    set((state) => ({ users: state.users.filter((u) => u.id !== id) })),
-}));
+export const useUsersStore = create<UsersState>()(
+  persist(
+    (set) => ({
+      users: [],
+      addUser: (user) => set((state) => ({ users: [...state.users, user] })),
+      removeUser: (id) =>
+        set((state) => ({ users: state.users.filter((u) => u.id !== id) })),
+    }),
+    { name: 'usersStorage' }
+  )
+);

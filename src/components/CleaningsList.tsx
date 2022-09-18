@@ -1,8 +1,7 @@
-import { Add, Delete, Info, MoreVert } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import {
   Card,
   Fab,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,27 +10,26 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import { useCleaningsStore } from '../stores/cleaningsStore';
 import { useDialogsStore } from '../stores/dialogsStore';
-import { useUsersStore } from '../stores/usersStore';
 
-const UsersList = () => {
-  const users = useUsersStore((state) => state.users);
-  const removeUser = useUsersStore((state) => state.removeUser);
-
-  const toggleCreateUserDialog = useDialogsStore(
-    (state) => state.toggleCreateUserDialog
+const CleaningsList = () => {
+  const toggleCreateCleaningDialog = useDialogsStore(
+    (state) => state.toggleCreateCleaningDialog
   );
 
+  const cleanings = useCleaningsStore((state) => state.cleanings);
+
   return (
-    <>
+    <div>
       <Fab
         variant="extended"
         sx={{ position: 'absolute', bottom: 24, right: 24 }}
         color="secondary"
-        onClick={toggleCreateUserDialog}
+        onClick={toggleCreateCleaningDialog}
       >
         <Add sx={{ mr: 1 }} />
-        Add user
+        Add cleaning
       </Fab>
 
       <Card sx={{ width: '100%' }}>
@@ -39,34 +37,32 @@ const UsersList = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell align="right">ID</TableCell>
-                <TableCell padding="checkbox" />
+                <TableCell>Date</TableCell>
+                <TableCell>User</TableCell>
+                <TableCell align="right">Room</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {cleanings.map((cleaning) => (
                 <TableRow
-                  key={user.id}
+                  key={cleaning.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {user.name}
+                    {cleaning.date.format('DD/MM/YYYY')}
                   </TableCell>
-                  <TableCell align="right">{user.id}</TableCell>
-                  <TableCell padding="checkbox">
-                    <IconButton onClick={() => removeUser(user.id)}>
-                      <Delete />
-                    </IconButton>
+                  <TableCell component="th" scope="row">
+                    {cleaning.user.name}
                   </TableCell>
+                  <TableCell align="right">{cleaning.room.name}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
-    </>
+    </div>
   );
 };
 
-export default UsersList;
+export default CleaningsList;

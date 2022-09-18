@@ -1,24 +1,19 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { Box, Fab, Stack, Tab, Tabs, Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
-import { AddUserButtonDialog } from '../src/components/AddUserButtonDialog';
 import CalculateCleaningUser from '../src/components/CalculateCleaningUser';
+import CleaningsList from '../src/components/CleaningsList';
+import { DialogsHolder } from '../src/components/DialogsHolder';
+import RoomsList from '../src/components/RoomsList';
+import { TabPanel } from '../src/components/TabPanel';
 import UsersList from '../src/components/UsersList';
+import { useTabStore } from '../src/stores/tabStore';
 import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
+  const { activeTab, setActiveTab } = useTabStore();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -28,15 +23,35 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Typography variant="h1">Welcome</Typography>
-        <Stack direction="row">
-          <AddUserButtonDialog />
-          <Box sx={{ ml: 2 }} />
-          <CalculateCleaningUser />
-        </Stack>
-        <Box sx={{ mt: 2 }} />
-        <UsersList />
+        <Typography sx={{ mb: 2 }} variant="h2">
+          Welcome
+        </Typography>
+        <CalculateCleaningUser />
+        <Box sx={{ my: 2 }} />
+
+        <Tabs
+          value={activeTab}
+          onChange={(_, v) => setActiveTab(v)}
+          sx={{ mb: 2 }}
+        >
+          <Tab label="Users" />
+          <Tab label="Cleanings" />
+          <Tab label="Rooms" />
+          <Tab label="Absence" />
+        </Tabs>
+
+        <TabPanel index={0}>
+          <UsersList />
+        </TabPanel>
+        <TabPanel index={1}>
+          <CleaningsList />
+        </TabPanel>
+        <TabPanel index={2}>
+          <RoomsList />
+        </TabPanel>
+        <TabPanel index={3}>Absences</TabPanel>
       </main>
+      <DialogsHolder />
     </div>
   );
 };
