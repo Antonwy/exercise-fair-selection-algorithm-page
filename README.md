@@ -9,7 +9,7 @@
 
 ## <a name="startProject"></a>Start the project
 
-Clone project by
+Navigate to your desired project location with `cd $xx$` and clone the project with
 
 ```bash
 git clone https://github.com/Antonwy/exercise-fair-selection-algorithm-page.git
