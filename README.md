@@ -9,6 +9,12 @@
 
 ## <a name="startProject"></a>Start the project
 
+Clone project by
+
+```bash
+git clone https://github.com/Antonwy/exercise-fair-selection-algorithm-page.git
+```
+
 Install project dependencies by typing in the terminal:
 
 ```bash
