@@ -12,18 +12,15 @@ type CreateUserFormError = {
 
 type CreateUserState = {
   name: string;
-  lastTimeCleaned?: Moment;
   errors: CreateUserFormError;
   createUser: () => boolean;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDateChange: (date?: Moment) => void;
   validate: () => CreateUserFormError;
   reset: () => void;
 };
 
 const useCreateUserStore = create<CreateUserState>((set, get) => ({
   name: '',
-  lastTimeCleaned: moment(),
   errors: {},
   createUser: () => {
     const errors = get().validate();
@@ -41,30 +38,22 @@ const useCreateUserStore = create<CreateUserState>((set, get) => ({
 
     set({ [id]: value });
   },
-  handleDateChange: (date) => set({ lastTimeCleaned: date }),
   validate: () => {
     let errors: CreateUserFormError = {};
 
-    const { name, lastTimeCleaned } = get();
+    const { name } = get();
 
     if (!name) errors.name = { message: 'Name is required' };
     if (name.length > 20) errors.name = { message: 'Name is too long' };
 
-    if (!lastTimeCleaned)
-      errors.lastTimeCleaned = { message: 'Last time cleaned is required' };
-    if (lastTimeCleaned!.isAfter(moment()))
-      errors.lastTimeCleaned = {
-        message: 'Last time cleaned must be in the past or today',
-      };
-
     return errors;
   },
-  reset: () => set({ name: '', lastTimeCleaned: moment(), errors: {} }),
+  reset: () => set({ name: '', errors: {} }),
 }));
 
 export const useShowCreateUserDialog = () => {
   const usersStore = useUsersStore((state) => state.addUser);
-  const { name, lastTimeCleaned } = useAddUserForm();
+  const { name } = useAddUserForm();
   const reset = useCreateUserStore((state) => state.reset);
 
   const { createUser } = useCreateUserStore(({ createUser }) => ({
@@ -81,7 +70,7 @@ export const useShowCreateUserDialog = () => {
   const handleAddUser = () => {
     if (!createUser()) return;
 
-    usersStore(User.createUser(name, lastTimeCleaned));
+    usersStore(User.createUser(name));
     toggleCreateUserDialog();
     reset();
   };
@@ -94,14 +83,10 @@ export const useShowCreateUserDialog = () => {
 };
 
 export const useAddUserForm = () =>
-  useCreateUserStore(
-    ({ name, lastTimeCleaned, handleInputChange, handleDateChange }) => ({
-      name,
-      lastTimeCleaned,
-      handleInputChange,
-      handleDateChange,
-    })
-  );
+  useCreateUserStore(({ name, handleInputChange }) => ({
+    name,
+    handleInputChange,
+  }));
 
 export const useFormErrors = () =>
   useCreateUserStore(({ errors }) => ({ errors }));

@@ -2,10 +2,12 @@ import { Add } from '@mui/icons-material';
 import { Box, Fab, Stack, Tab, Tabs, Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import AbsencesList from '../src/components/AbsencesList';
 import CalculateCleaningUser from '../src/components/CalculateCleaningUser';
 import CleaningsList from '../src/components/CleaningsList';
 import { DialogsHolder } from '../src/components/DialogsHolder';
 import RoomsList from '../src/components/RoomsList';
+import SettingsTab from '../src/components/SettingsTab';
 import { TabPanel } from '../src/components/TabPanel';
 import UsersList from '../src/components/UsersList';
 import { useTabStore } from '../src/stores/tabStore';
@@ -38,6 +40,7 @@ const Home: NextPage = () => {
           <Tab label="Cleanings" />
           <Tab label="Rooms" />
           <Tab label="Absence" />
+          <Tab label="Settings" />
         </Tabs>
 
         <TabPanel index={0}>
@@ -49,7 +52,12 @@ const Home: NextPage = () => {
         <TabPanel index={2}>
           <RoomsList />
         </TabPanel>
-        <TabPanel index={3}>Absences</TabPanel>
+        <TabPanel index={3}>
+          <AbsencesList />
+        </TabPanel>
+        <TabPanel index={4}>
+          <SettingsTab />
+        </TabPanel>
       </main>
       <DialogsHolder />
     </div>

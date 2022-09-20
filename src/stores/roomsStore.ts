@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Room } from '../models/Room';
@@ -20,3 +21,14 @@ export const useRoomsStore = create<RoomsState>()(
     { name: 'roomsStorage' }
   )
 );
+
+export const usePersistentRooms = () => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const persistentRooms = useRoomsStore((state) => state.rooms);
+
+  useEffect(() => {
+    setRooms(persistentRooms);
+  }, [persistentRooms]);
+
+  return rooms;
+};

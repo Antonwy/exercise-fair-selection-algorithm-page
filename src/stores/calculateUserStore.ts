@@ -1,25 +1,45 @@
 import create from 'zustand';
-import { calculateCleaningUser } from '../helpers/calculateCleaningUser';
+import { calculateCleaningUsers } from '../helpers/calculateCleaningUser';
+import { Absence } from '../models/Absence';
+import { Cleaning } from '../models/Cleaning';
+import { Room } from '../models/Room';
 import { User } from '../models/User';
+import { CleaningSettings } from './settingsStore';
 
 type CalculateUserState = {
-  user?: User;
+  users: User[];
   showUser: boolean;
-  calculateUser: (users: User[]) => void;
+  calculateUser: (
+    users: User[],
+    rooms: Room[],
+    cleanings: Cleaning[],
+    absences: Absence[],
+    settings: CleaningSettings
+  ) => void;
   closeDialog: () => void;
 };
 
 export const useCalculateUserStore = create<CalculateUserState>((set) => ({
   showUser: false,
-  calculateUser: (users) =>
-    set({ user: calculateCleaningUser(users), showUser: true }),
+  users: [],
+  calculateUser: (users, rooms, cleanings, absences, settings) =>
+    set({
+      users: calculateCleaningUsers(
+        users,
+        rooms,
+        cleanings,
+        absences,
+        settings
+      ),
+      showUser: true,
+    }),
   closeDialog: () => set({ showUser: false }),
 }));
 
 export const useCalcluateUser = () =>
-  useCalculateUserStore(({ showUser, calculateUser, user, closeDialog }) => ({
+  useCalculateUserStore(({ showUser, calculateUser, users, closeDialog }) => ({
     showUser,
     calculateUser,
-    user,
+    users,
     closeDialog,
   }));

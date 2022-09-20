@@ -1,7 +1,8 @@
-import { Add } from '@mui/icons-material';
+import { Add, Delete } from '@mui/icons-material';
 import {
   Card,
   Fab,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,14 +12,15 @@ import {
   TableRow,
 } from '@mui/material';
 import { useDialogsStore } from '../stores/dialogsStore';
-import { useRoomsStore } from '../stores/roomsStore';
+import { usePersistentRooms, useRoomsStore } from '../stores/roomsStore';
 
 const RoomsList = () => {
   const toggleCreateRoomDialog = useDialogsStore(
     (state) => state.toggleCreateRoomDialog
   );
 
-  const rooms = useRoomsStore((state) => state.rooms);
+  const rooms = usePersistentRooms();
+  const removeRoom = useRoomsStore((state) => state.removeRoom);
 
   return (
     <div>
@@ -39,6 +41,7 @@ const RoomsList = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell align="right">ID</TableCell>
+                <TableCell padding="checkbox" />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -51,6 +54,11 @@ const RoomsList = () => {
                     {room.name}
                   </TableCell>
                   <TableCell align="right">{room.id}</TableCell>
+                  <TableCell padding="checkbox">
+                    <IconButton onClick={() => removeRoom(room.id)}>
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

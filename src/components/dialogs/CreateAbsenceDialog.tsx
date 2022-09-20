@@ -14,23 +14,21 @@ import {
   Select,
 } from '@mui/material';
 import { DesktopDatePicker } from '@mui/x-date-pickers';
-import { useShowCreateCleaningDialog } from '../../stores/createStores/createCleaningStore';
+import { useShowCreateAbsenceDialog } from '../../stores/createStores/createAbsenceStore';
 
-export const CreateCleaningDialog = () => {
+export const CreateAbsenceDialog = () => {
   const {
     userId,
-    roomId,
-    date,
-    createCleaning,
+    createAbsence,
     showDialog,
     toggleDialog,
-    errors,
     handleDateChange,
-    handleInputChange,
     handleSelectChange,
-    rooms,
     users,
-  } = useShowCreateCleaningDialog();
+    errors,
+    from,
+    to,
+  } = useShowCreateAbsenceDialog();
 
   const fieldHasError = (field: string): boolean =>
     (errors && errors[field] != null) ?? true;
@@ -40,12 +38,12 @@ export const CreateCleaningDialog = () => {
 
   return (
     <Dialog open={showDialog} onClose={toggleDialog}>
-      <DialogTitle>Add cleaning</DialogTitle>
+      <DialogTitle>Add absence</DialogTitle>
       <DialogContent>
         <Box component="form" autoComplete="off">
           <DialogContentText sx={{ mb: 1 }}>
-            Add a cleaning to the database by selecting the cleaning name, the
-            cleaned room and the date.
+            Add an absence to the database by selecting the absent user, and the
+            from, to date.
           </DialogContentText>
           <FormControl
             variant="filled"
@@ -68,39 +66,36 @@ export const CreateCleaningDialog = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl
-            variant="filled"
-            sx={{ mb: 1 }}
-            fullWidth
-            error={fieldHasError('roomId')}
-          >
-            <InputLabel id="room-select-label">Room</InputLabel>
-            <Select
-              labelId="room-select-label"
-              value={roomId}
-              name="roomId"
-              label="Room"
-              onChange={handleSelectChange}
-            >
-              {rooms.map((room) => (
-                <MenuItem key={room.id} value={room.id}>
-                  {room.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <DesktopDatePicker
-            label="Last time cleaned"
+            label="Absent from"
             inputFormat="MM/DD/YYYY"
-            value={date}
-            onChange={(val) => val && handleDateChange(val)}
+            value={from}
+            onChange={(val) => val && handleDateChange('from', val)}
             renderInput={(params) => (
               <TextField
                 required
-                error={fieldHasError('lastTimeCleaned')}
-                helperText={fieldHelperText('lastTimeCleaned')}
-                onChange={handleInputChange}
-                id="lastTimeCleaned"
+                error={fieldHasError('from')}
+                helperText={fieldHelperText('from')}
+                id="from"
+                fullWidth
+                type="text"
+                variant="filled"
+                sx={{ mb: 1 }}
+                {...params}
+              />
+            )}
+          />
+          <DesktopDatePicker
+            label="To"
+            inputFormat="MM/DD/YYYY"
+            value={to}
+            onChange={(val) => val && handleDateChange('to', val)}
+            renderInput={(params) => (
+              <TextField
+                required
+                error={fieldHasError('to')}
+                helperText={fieldHelperText('to')}
+                id="to"
                 fullWidth
                 type="text"
                 variant="filled"
@@ -112,8 +107,8 @@ export const CreateCleaningDialog = () => {
       </DialogContent>
       <DialogActions>
         <Button onClick={toggleDialog}>Cancel</Button>
-        <Button type="submit" onClick={createCleaning}>
-          Add cleaning
+        <Button type="submit" onClick={createAbsence}>
+          Add absence
         </Button>
       </DialogActions>
     </Dialog>

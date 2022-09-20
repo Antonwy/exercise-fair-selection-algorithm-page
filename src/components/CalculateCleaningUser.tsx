@@ -6,22 +6,37 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { usePersistentAbsences } from '../stores/absencesStore';
 import { useCalcluateUser } from '../stores/calculateUserStore';
-import { useUsersStore } from '../stores/usersStore';
+import { usePersistentCleanings } from '../stores/cleaningsStore';
+import { usePersistentRooms } from '../stores/roomsStore';
+import { useCleaningSettings } from '../stores/settingsStore';
+import { usePersistentUsers, useUsersStore } from '../stores/usersStore';
 
 const CalculateCleaningUser = () => {
-  const { showUser, closeDialog, calculateUser, user } = useCalcluateUser();
-  const users = useUsersStore((state) => state.users);
+  const { showUser, closeDialog, calculateUser, users } = useCalcluateUser();
+  const persUsers = usePersistentUsers();
+  const cleanings = usePersistentCleanings();
+  const rooms = usePersistentRooms();
+  const absences = usePersistentAbsences();
+  const settings = useCleaningSettings();
 
   return (
     <div>
-      <Button variant="contained" onClick={() => calculateUser(users)}>
+      <Button
+        variant="contained"
+        onClick={() =>
+          calculateUser(persUsers, rooms, cleanings, absences, settings)
+        }
+      >
         Calculate Cleaning User
       </Button>
       <Dialog open={showUser} onClose={closeDialog}>
-        <DialogTitle>Cleaning user:</DialogTitle>
+        <DialogTitle>Cleaning users:</DialogTitle>
         <DialogContent>
-          <DialogContentText>{user?.name ?? 'No user found'}</DialogContentText>
+          <DialogContentText>
+            {users.length === 0 ? 'No users found' : users.join(', ')}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>Cancel</Button>

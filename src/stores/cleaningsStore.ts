@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import { Cleaning } from '../models/Cleaning';
@@ -22,3 +23,14 @@ export const useCleaningsStore = create<CleaningsState>()(
     { name: 'cleaningsStorage' }
   )
 );
+
+export const usePersistentCleanings = () => {
+  const [cleanings, setCleanings] = useState<Cleaning[]>([]);
+  const persistentCleanings = useCleaningsStore((state) => state.cleanings);
+
+  useEffect(() => {
+    setCleanings(persistentCleanings);
+  }, [persistentCleanings]);
+
+  return cleanings;
+};

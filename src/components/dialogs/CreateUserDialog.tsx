@@ -8,7 +8,6 @@ import {
   DialogActions,
   Button,
 } from '@mui/material';
-import { DesktopDatePicker } from '@mui/x-date-pickers';
 import {
   useFormErrors,
   useAddUserForm,
@@ -18,8 +17,7 @@ import {
 export const CreateUserDialog = () => {
   const { createUser, showDialog, toggleDialog } = useShowCreateUserDialog();
   const { errors } = useFormErrors();
-  const { name, lastTimeCleaned, handleInputChange, handleDateChange } =
-    useAddUserForm();
+  const { name, handleInputChange } = useAddUserForm();
 
   const fieldHasError = (field: string): boolean =>
     (errors && errors[field] != null) ?? true;
@@ -48,25 +46,6 @@ export const CreateUserDialog = () => {
             value={name}
             onChange={handleInputChange}
             sx={{ mb: 1 }}
-          />
-          <DesktopDatePicker
-            label="Last time cleaned"
-            inputFormat="MM/DD/YYYY"
-            value={lastTimeCleaned}
-            onChange={(val) => handleDateChange(val == null ? undefined : val)}
-            renderInput={(params) => (
-              <TextField
-                required
-                error={fieldHasError('lastTimeCleaned')}
-                helperText={fieldHelperText('lastTimeCleaned')}
-                onChange={handleInputChange}
-                id="lastTimeCleaned"
-                fullWidth
-                type="text"
-                variant="filled"
-                {...params}
-              />
-            )}
           />
         </Box>
       </DialogContent>

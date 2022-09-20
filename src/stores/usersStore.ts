@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import { User } from '../models/User';
@@ -19,3 +20,15 @@ export const useUsersStore = create<UsersState>()(
     { name: 'usersStorage' }
   )
 );
+
+// persist x hydration fix
+export const usePersistentUsers = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const persistentUsers = useUsersStore((state) => state.users);
+
+  useEffect(() => {
+    setUsers(persistentUsers);
+  }, [persistentUsers]);
+
+  return users;
+};

@@ -29,8 +29,8 @@ type CreateCleaningState = {
 };
 
 const useCreateCleaningStore = create<CreateCleaningState>((set, get) => ({
-  user: undefined,
-  room: undefined,
+  userId: '',
+  roomId: '',
   date: moment(),
   errors: {},
   createCleaning: () => {
@@ -54,15 +54,15 @@ const useCreateCleaningStore = create<CreateCleaningState>((set, get) => ({
   validate: () => {
     let errors: CreateCleaningFormError = {};
 
-    const { userId, roomId } = get();
+    const { userId, roomId, date } = get();
 
     if (!userId) errors.user = { message: 'User is required' };
     if (!roomId) errors.room = { message: 'Room is required' };
+    if (!date) errors.date = { message: 'Date is required' };
 
     return errors;
   },
-  reset: () =>
-    set({ roomId: undefined, userId: undefined, date: moment(), errors: {} }),
+  reset: () => set({ roomId: '', userId: '', date: moment(), errors: {} }),
 }));
 
 export const useShowCreateCleaningDialog = () => {
