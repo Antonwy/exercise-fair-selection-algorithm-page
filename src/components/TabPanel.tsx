@@ -12,7 +12,11 @@ export const TabPanel = (props: TabPanelProps) => {
 
   return (
     <div hidden={activeTab !== index} {...other}>
-      {activeTab === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      <Box
+        sx={{ p: 3, visibility: activeTab === index ? 'visible' : 'hidden' }}
+      >
+        {children}
+      </Box>
     </div>
   );
 };
